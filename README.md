@@ -24,6 +24,19 @@ This will display the help page for pyfile. The help page should explain the too
 
 ## Quick Start
 
+### List Files in Directory
+
+To list all the files in a directory type the following:
+
+```python3 main.py -l --src "<source_directory>"```
+
+To list everything in the current working directory use:
+
+```python3 main.py -l```
+
+
+lists everything in the root directory.
+
 ### Sort Images by Year/Month
 
 To sort images into directories by year/month type the following:

@@ -1,0 +1,9 @@
+[project]
+name = "pyfile"
+version = "0.1.0"
+description = "A small python package to do some things with files."
+authors = [{ name = "Nick Toothaker", email = "nicktoothaker@gmail.com" }]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
