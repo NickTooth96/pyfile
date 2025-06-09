@@ -4,15 +4,15 @@ import shutil
 from statistics import mean
 import sys
 import getopt
-from PIL import Image
+# from PIL import Image
 
 
 __VERSION__ = "1.3.0"
 __AUTHOR__ = "Nicholas Toothaker"
 __PATH__ = os.path.dirname(os.path.abspath(__file__))
 
-BLACKLIST = ['97TH', 'REGIMENTAL', 'STRING', 'BAND', '-','']
-GRAYLIST = ['THE', 'A', 'AN','OF','ON','AND','TO']
+BLACKLIST = ['97TH', 'REGIMENTAL', 'STRING', 'BAND', '-', '', '(Civil', 'War', 'Music)']
+GRAYLIST = ['THE', 'A', 'AN','OF','ON','AND','TO', 'AND']
 
 
 ### Class
@@ -118,13 +118,61 @@ class Pseudoname():
         total_percent = round(mean(percent_list)*100,2)
         return total_percent
 
-        
+def _name_list_from_file(filepath):
+    out = []
+    with open(filepath, 'r') as file:
+        lines = file.readlines()
+    for line in lines:
+        out.append(str(line))
+    return out
+
+def _process_file_list(titles: list) -> list:
+    out = []
+    for title in titles:
+        buffer = {}
+        # print(title)
+        title = title.strip()
+        # print(type(title),title)
+        filename = _remove_blacklist(title[:len(title)-4])
+        ext = title[-3:]
+        rename = f"{_make_title(filename)}.{ext}"
+        # print("NAME:", filename, "\nEXT:", ext)
+        # print(_make_title(filename))
+        buffer["from"] = title
+        buffer["to"] = rename
+        buffer["filename"] = filename
+        buffer["extention"] = ext
+        out.append(buffer)
+    return out
+
+def _remove_blacklist(filename: str) -> str:
+    out = filename
+    tmp = filename.split(" ")
+    for x in tmp:
+        if x.upper() in BLACKLIST:
+            out = out.replace(str(x),"")
+    out = out.strip()
+    if '-' in out:
+        out = out.replace('-', ' ').strip()
+        out =  _remove_blacklist(out)
+    return out.strip()
+
+def _make_title(filename: str) -> str:
+    out = ""
+    tmp = filename.split()
+    for word in tmp:
+        if word.upper() not in GRAYLIST:
+            out += f"{word[0].upper()}{word[1:]} "
+        else:
+            out += f"{word} "
+    return out.strip()
 
 
+titles = _name_list_from_file('/Users/nicktoothaker/Documents/97reg.txt')
+map = _process_file_list(titles)
+for x in map:
+    # print (x)
+    line = f"{x["from"]} -> {x["to"]}"
+    print(line)
 
-# fs = Pseudoname()
-# fs.reasonable_match("regimentall","REGIMENTAL")
 
-        
-        
-            
