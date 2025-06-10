@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 import getopt
-from PIL import Image
+# from PIL import Image
 
 
 __VERSION__ = "1.3.0"

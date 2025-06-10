@@ -5,7 +5,7 @@ import subprocess
 import sys
 import argparse
 import time
-from PIL import Image
+# from PIL import Image
 
 import sorter
 import pseudonym
