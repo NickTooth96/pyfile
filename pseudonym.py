@@ -31,18 +31,6 @@ class Pseudoname():
         self.dest_structure = {}
         self.dir_contents = self.get_list()
     
-    def get_list(self):
-        # buffer = []
-        output = []
-        buffer = os.listdir(self.source_dir)
-        file_count = 0
-        for x in buffer:
-            if os.path.isfile(os.path.join(self.source_dir,x)):
-                output.append(x)
-                file_count += 1
-        print("Source Directory contains ",file_count,"files.")
-        return output
-    
     def rename(self):
         for x in self.dir_contents:
             title = ""
@@ -118,6 +106,17 @@ class Pseudoname():
         total_percent = round(mean(percent_list)*100,2)
         return total_percent
 
+def get_list(source: str) -> list:
+    output = []
+    buffer = os.listdir(os.path.expanduser(source))
+    file_count = 0
+    for x in buffer:
+        if os.path.isfile(os.path.join(source,x)):
+            output.append(x)
+            file_count += 1
+    print("Source Directory contains ",file_count,"files.")
+    return output
+    
 def _name_list_from_file(filepath):
     out = []
     with open(filepath, 'r') as file:
@@ -130,14 +129,11 @@ def _process_file_list(titles: list) -> list:
     out = []
     for title in titles:
         buffer = {}
-        # print(title)
         title = title.strip()
-        # print(type(title),title)
-        filename = _remove_blacklist(title[:len(title)-4])
-        ext = title[-3:]
-        rename = f"{_make_title(filename)}.{ext}"
-        # print("NAME:", filename, "\nEXT:", ext)
-        # print(_make_title(filename))
+        filename, ext = os.path.splitext(title)
+        filename = _remove_blacklist(filename)
+        rename = f"{_make_title(filename)}{ext}"
+        # print(title,filename,ext,rename)
         buffer["from"] = title
         buffer["to"] = rename
         buffer["filename"] = filename
@@ -165,14 +161,18 @@ def _make_title(filename: str) -> str:
             out += f"{word[0].upper()}{word[1:]} "
         else:
             out += f"{word} "
+    out = f"{out[0].upper()}{out[1:]}"            
     return out.strip()
 
 
-titles = _name_list_from_file('/Users/nicktoothaker/Documents/97reg.txt')
+titles = _name_list_from_file('/Users/nicktoothaker/Documents/short_97reg.txt')
 map = _process_file_list(titles)
-for x in map:
-    # print (x)
-    line = f"{x["from"]} -> {x["to"]}"
-    print(line)
+
+# other_titles = get_list('.')
+# other_map = _process_file_list(other_titles)
+
+for m in map:
+    print(m['to'])
+
 
 
