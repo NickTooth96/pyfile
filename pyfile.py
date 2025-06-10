@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# 
 import datetime
 import os
 import shutil
@@ -38,10 +40,15 @@ parser.add_argument('--source',dest='source',default=__PATH__, help=SOURCE_HELP)
 parser.add_argument('--destination',dest='destination',default=__PATH__)
 args = parser.parse_args()
 
+src = args.source
+dst = args.destination
+
 if args.source and not args.destination:
-    args.destination = args.source
+    src = os.path.abspath(args.source)
+    dst = src
 elif not args.source and args.destination:
-    args.source = args.destination 
+    src =  os.path.abspath(args.source)
+    dst =  os.path.abspath(args.destination) 
 
 
 ### MAIN
@@ -49,14 +56,13 @@ elif not args.source and args.destination:
 
 # subprocess.call("clear", shell=True)
 if args.sort:
-    sorter = sorter.Sorter(args.source,args.destination)
+    sorter = sorter.Sorter(src, dst)
     sorter.sort()
 elif args.unsort:
-    sorter = sorter.Sorter(args.source,args.destination)
+    sorter = sorter.Sorter(src, dst)
     sorter.unsort()
 elif args.rename:
-    sorter = pseudonym.Pseudoname(args.source,args.destination)
-    sorter.rename()
+    sorter = pseudonym.rename_files(src)
 elif args.version:
     print("Pyfile ",__VERSION__)
 else:
